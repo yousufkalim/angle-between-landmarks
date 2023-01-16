@@ -15,7 +15,16 @@
  * @param {Boolean} round boolean value to check if we have to return round
  * @return {Number} degree 0 to 360
  */
-const calculateDegrees = (x1, y1, x2, y2, x3, y3, small, round) => {
+const calculateDegrees = (
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+  x3: number,
+  y3: number,
+  small: boolean,
+  round: boolean,
+): number => {
   // Making the radians from joint angles
   const A = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
   const B = Math.sqrt(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2));
@@ -23,7 +32,7 @@ const calculateDegrees = (x1, y1, x2, y2, x3, y3, small, round) => {
   const jointAngleRadians = Math.acos((B * B + A * A - C * C) / (2 * B * A));
 
   // Making the degree from radians angle
-  let jointAngleDegrees = Math.round((jointAngleRadians * 180.0) / Math.PI, 1);
+  let jointAngleDegrees = Math.round((jointAngleRadians * 180.0) / Math.PI);
 
   //   This will prevent negative values (it will convert -90 to 270)
   jointAngleDegrees = (jointAngleDegrees + 360) % 360;
@@ -38,15 +47,40 @@ const calculateDegrees = (x1, y1, x2, y2, x3, y3, small, round) => {
 
   if (round) {
     //   Making round from 0
-    jointAngleDegrees = Math.round(jointAngleDegrees, 0);
+    jointAngleDegrees = Math.round(jointAngleDegrees);
   }
 
   // Finally return the calculated angle
   return jointAngleDegrees;
 };
 
+interface Landmarks {
+  x: number | string;
+  y: number | string;
+}
+
+interface ValidateArgs {
+  landmarks1: {
+    x: number;
+    y: number;
+  };
+  landmarks2: {
+    x: number;
+    y: number;
+  };
+  landmarks3: {
+    x: number;
+    y: number;
+  };
+}
+
 // This function will validate the arguments
-const validateArgs = (landmarks1, landmarks2, landmarks3, opt) => {
+const validateArgs = (
+  landmarks1: Landmarks,
+  landmarks2: Landmarks,
+  landmarks3: Landmarks,
+  opt: { small: boolean; round: boolean },
+): ValidateArgs => {
   if (!landmarks1 || !landmarks2 || !landmarks3) {
     throw new Error('Please provide landmarks');
   }
@@ -55,7 +89,8 @@ const validateArgs = (landmarks1, landmarks2, landmarks3, opt) => {
   }
   if (
     [landmarks1, landmarks2, landmarks3].some(
-      (landmark) => isNaN(parseFloat(landmark.x)) || isNaN(parseFloat(landmark.y)),
+      (landmark) =>
+        isNaN(parseFloat(landmark.x as string)) || isNaN(parseFloat(landmark.y as string)),
     )
   ) {
     throw new Error('Please provide landmarks with correct x and y values');
@@ -66,16 +101,16 @@ const validateArgs = (landmarks1, landmarks2, landmarks3, opt) => {
 
   return {
     landmarks1: {
-      x: parseFloat(landmarks1.x),
-      y: parseFloat(landmarks1.y),
+      x: parseFloat(landmarks1.x as string),
+      y: parseFloat(landmarks1.y as string),
     },
     landmarks2: {
-      x: parseFloat(landmarks2.x),
-      y: parseFloat(landmarks2.y),
+      x: parseFloat(landmarks2.x as string),
+      y: parseFloat(landmarks2.y as string),
     },
     landmarks3: {
-      x: parseFloat(landmarks3.x),
-      y: parseFloat(landmarks3.y),
+      x: parseFloat(landmarks3.x as string),
+      y: parseFloat(landmarks3.y as string),
     },
   };
 };
@@ -88,7 +123,12 @@ const validateArgs = (landmarks1, landmarks2, landmarks3, opt) => {
  * @param landmarks3
  * @param opt
  */
-const findAngle = (landmarks1, landmarks2, landmarks3, opt = { small: false, round: true }) => {
+const findAngle = (
+  landmarks1: Landmarks,
+  landmarks2: Landmarks,
+  landmarks3: Landmarks,
+  opt = { small: false, round: true },
+): number => {
   const validatedArgs = validateArgs(landmarks1, landmarks2, landmarks3, opt);
   const { x: x1, y: y1 } = validatedArgs.landmarks1;
   const { x: x2, y: y2 } = validatedArgs.landmarks2;

@@ -13,6 +13,13 @@ All notable changes to this project will be documented in this file.
 > - Documentation
 > - Internal
 > - Unreleased
+
+## v1.1.4
+
+#### Enhancements
+
+- Structural changes to the project
+
 ## v1.0.0
 
 #### Features

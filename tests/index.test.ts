@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals';
-import findAngle from '../src/index.js';
+import findAngle from '../src';
 
 const landmarks1 = { x: 0, y: 0 };
 const landmarks2 = { x: 1, y: 0 };
